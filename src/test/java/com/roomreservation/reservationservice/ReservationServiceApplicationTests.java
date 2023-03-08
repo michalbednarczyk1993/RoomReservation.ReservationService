@@ -1,4 +1,4 @@
-package com.reservationservice.reservationservice;
+package com.roomreservation.reservationservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
