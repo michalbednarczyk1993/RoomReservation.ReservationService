@@ -1,13 +1,13 @@
 package com.roomreservation.reservationservice;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.Test;
 
 @SpringBootTest
-class ReservationServiceApplicationTests {
+class ReservationServiceApplicationTest {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }
