@@ -47,7 +47,7 @@ public class ReservationServiceAPI {
 
     /**
      * Return list of all reservations with parameters such as:
-     * status, list of chosen services, room number, client contact data,
+     * status, list of chosen services, room number, client contact data.
      *
      * @return list of all reservations in JSON format
      */
@@ -59,8 +59,9 @@ public class ReservationServiceAPI {
 
     /**
      * Return list of all client reservations with parameters such as:
-     * status, list of chosen services, room number, client contact data,
+     * status, list of chosen services, room number, client contact data.
      *
+     * @param clientId - ID of client that is related to this reservation
      * @return list of all client reservations in JSON format
      */
     @GetMapping
@@ -68,13 +69,29 @@ public class ReservationServiceAPI {
         return null;
     }
 
+    /**
+     * Within this request it is possible to change status of reservation.
+     * There are no rule which limit expected status based on current one.
+     *
+     * @param reservationId - ID of reservation
+     * @param status - expected status
+     * @return request status
+     */
     @PatchMapping
-    public void changeReservationStatus(Integer reservationId, String status) {
-
+    public ResponseEntity<?> changeReservationStatus(Integer reservationId, String status) {
+        return null;
     }
 
+    /**
+     * Within this request it is possible to cancel pointed reservation.
+     * It is impossible to cancel realized or canceled reservation.
+     * In such case service will respond with 400 "Bad Request" HTTP message.
+     *
+     * @param reservationId - ID of reservation
+     * @return request status
+     */
     @PatchMapping
-    public void cancelReservation(Integer reservationId) {
-
+    public ResponseEntity<?> cancelReservation(Integer reservationId) {
+        return null;
     }
 }
