@@ -4,13 +4,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.Date;
 import java.time.Month;
 import java.time.Year;
-import java.time.YearMonth;
 
 @RestController
-public class StatisticsService {
+public class StatisticsServiceAPI {
 
     /**
      * Return statistic data with popularity of room types with different additional services over time.
