@@ -4,9 +4,9 @@ import com.roomreservation.reservationservice.core.dto.Currency;
 import com.roomreservation.reservationservice.core.dto.RoomType;
 import com.roomreservation.reservationservice.core.dto.Service;
 import com.roomreservation.reservationservice.core.dto.Status;
-import jakarta.persistence.*;
 import lombok.*;
 
+import javax.persistence.*;
 import java.sql.Date;
 import java.util.List;
 
