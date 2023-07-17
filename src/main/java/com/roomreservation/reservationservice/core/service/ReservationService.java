@@ -49,4 +49,9 @@ public class ReservationService {
         entity.setStatus(Status.valueOf(status));
         reservationRepository.save(entity);
     }
+
+    public List<ReservationDto> getUserReservations(Integer userId, Integer page, Integer size) {
+        return getReservations(page, size)
+                .stream().filter(reservationDto -> reservationDto.clientId().equals(userId)).toList();
+    }
 }

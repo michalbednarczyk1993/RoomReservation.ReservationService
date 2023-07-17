@@ -53,7 +53,7 @@ public class ReservationController {
 
     }
 
-    @GetMapping("/reservations/{page}")
+    @GetMapping("/reservation/all/{page}")
     @ApiOperation(value = "Zwraca listę wszystkich rezerwacji, uwzględniając paginację i sortowanie.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Sukces", responseContainer = "List", response = ReservationDto.class),
@@ -70,19 +70,22 @@ public class ReservationController {
         return new ResponseEntity<>("Usługa jeszcze nie jest gotowa", HttpStatus.NOT_IMPLEMENTED);
     }
 
-// TODO: Later implement this endpoint
-//    @GetMapping("/reservations/")
-//    @ApiOperation(value = "Zwraca listę wszystkich rezerwacji, spełniających dane kryteria, uwzględniając paginację.")
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "Sukces", response = ReservationDto.class),
-//            @ApiResponse(code = 204, message = "Brak dostępnych zasobów spełniających kryteria"),
-//            @ApiResponse(code = 400, message = "Nieprawidłowe dane w żadaniu"),
-//            @ApiResponse(code = 500, message = "Błąd serwera"),
-//            @ApiResponse(code = 501, message = "Usługa jeszcze nie jest gotowa")
-//    })
-//    public ResponseEntity<?> getReservationsWithParams(@ApiParam @PathVariable Integer id) {
-//        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-//    }
+    @GetMapping("/reservation/all/{userId}/{page}")
+    @ApiOperation(value = "Zwraca listę rezerwacji dla danego użytkownika")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Sukces"),
+            @ApiResponse(code = 204, message = "Brak dostępnych zasobów spełniających kryteria"),
+            @ApiResponse(code = 400, message = "Nieprawidłowe dane w żądaniu"),
+//            @ApiResponse(code = 403, message = "Błąd autoryzacji"), //TODO: After JWT implementation
+            @ApiResponse(code = 500, message = "Błąd serwera"),
+            @ApiResponse(code = 501, message = "Usługa jeszcze nie jest gotowa")
+    })
+    public ResponseEntity<?> getUserReservations(@ApiParam @Min(1) @PathVariable Integer userId,
+                                                 @ApiParam @Min(1) @NotNull @PathVariable Integer page,
+                                                 @ApiParam @Min(1) @NotNull @RequestBody Integer size) {
+        List<ReservationDto> reservations = reservationService.getUserReservations(userId, page, size);
+        return new ResponseEntity<>(reservations, HttpStatus.OK);
+    }
 
     @PutMapping("/reservation/{id}")
     @ApiOperation(value = "Aktualizuje rezerwację o danym ID.")
