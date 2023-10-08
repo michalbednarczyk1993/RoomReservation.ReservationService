@@ -1,5 +1,6 @@
 # RoomReservation.ReservationService
-Part of "Room Reservation" project, which is responsible for operations at reservations
+Part of "Room Reservation" project, which is responsible for operations at reservations.
+This microservice will be written in Spring framework.
 
 http://localhost:8081/swagger-ui.html -- swagger UI
 
