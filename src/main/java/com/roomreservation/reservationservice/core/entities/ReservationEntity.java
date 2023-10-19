@@ -2,7 +2,6 @@ package com.roomreservation.reservationservice.core.entities;
 
 import com.roomreservation.reservationservice.core.dto.Currency;
 import com.roomreservation.reservationservice.core.dto.RoomType;
-import com.roomreservation.reservationservice.core.dto.Service;
 import com.roomreservation.reservationservice.core.dto.Status;
 import lombok.*;
 
@@ -18,7 +17,8 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-public class Reservation {
+@Table(name = "RESERVATION")
+public class ReservationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -33,11 +33,8 @@ public class Reservation {
     @Column(length = 12, nullable = false)
     private RoomType roomType;
 
-    @ElementCollection(targetClass = Service.class)
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "RESERVATION_SERVICES")
-    @Column(name = "SERVICES")
-    private List<Service> services;
+    @OneToMany(mappedBy = "reservation", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<ReservationServicesEntity> services;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 12, nullable = false)

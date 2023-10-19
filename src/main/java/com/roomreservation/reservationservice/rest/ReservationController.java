@@ -2,25 +2,30 @@ package com.roomreservation.reservationservice.rest;
 
 import com.roomreservation.reservationservice.core.dto.*;
 import com.roomreservation.reservationservice.core.service.ReservationService;
+import com.roomreservation.reservationservice.core.service.TestService;
 import io.swagger.annotations.*;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
-@Slf4j
 @RestController
 public class ReservationController {
 
-    ReservationService reservationService;
+    final ReservationService reservationService;
+    final TestService testService;
 
-    ReservationController(ReservationService reservationService) {
+    private static final Logger logger = LoggerFactory.getLogger(ReservationService.class);
+
+    public ReservationController(ReservationService reservationService, TestService testService) {
         this.reservationService = reservationService;
+        this.testService = testService;
     }
 
     @PostMapping("/reservation")
@@ -30,12 +35,11 @@ public class ReservationController {
             @ApiResponse(code = 204, message = "Brak dostępnych zasobów spełniających kryteria"),
             @ApiResponse(code = 400, message = "Nieprawidłowe dane w żądaniu"),
             @ApiResponse(code = 500, message = "Błąd serwera"),
-            @ApiResponse(code = 501, message = "Usługa jeszcze nie jest gotowa")
     })
-    public ResponseEntity<?> createReservation(@Validated(ReservationDto.OnCreate.class) @RequestBody ReservationDto initialData) {
+    public ResponseEntity<?> createReservation(@RequestBody @Valid ReservationDto initialData) {
+        logger.error("Create reservation request send with data" + initialData.toString());
         reservationService.createReservation(initialData);
-//        return new ResponseEntity<>("Sukces", HttpStatus.OK);
-        return new ResponseEntity<>("Usługa jeszcze nie jest gotowa", HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>("Sukces", HttpStatus.OK);
     }
 
     @GetMapping("/reservation/{id}")
@@ -44,13 +48,10 @@ public class ReservationController {
             @ApiResponse(code = 200, message = "Sukces", response = ReservationDto.class),
             @ApiResponse(code = 204, message = "Brak dostępnych zasobów spełniających kryteria"),
             @ApiResponse(code = 500, message = "Błąd serwera"),
-            @ApiResponse(code = 501, message = "Usługa jeszcze nie jest gotowa")
     })
-    public ResponseEntity<?> getReservation(@ApiParam @Min(value = 1) @PathVariable Integer id) {
+    public ResponseEntity<?> getReservation(@PathVariable @ApiParam @Positive Integer id) {
         ReservationDto result = reservationService.getReservation(id);
-//        return new ResponseEntity<>(result, HttpStatus.OK);
-        return new ResponseEntity<>("Usługa jeszcze nie jest gotowa", HttpStatus.NOT_IMPLEMENTED);
-
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/reservation/all/{page}")
@@ -60,14 +61,12 @@ public class ReservationController {
             @ApiResponse(code = 204, message = "Brak dostępnych zasobów spełniających kryteria"),
             @ApiResponse(code = 400, message = "Nieprawidłowe dane w żadaniu"),
             @ApiResponse(code = 500, message = "Błąd serwera"),
-            @ApiResponse(code = 501, message = "Usługa jeszcze nie jest gotowa")
     })
     public ResponseEntity<?> getReservations(
-            @ApiParam @Min(1) @NotNull @PathVariable Integer page,
-            @ApiParam @Min(1) @NotNull @RequestBody Integer size) {
+            @ApiParam @Positive @PathVariable Integer page,
+            @ApiParam @Positive @RequestBody Integer size) {
         List<?> result = reservationService.getReservations(page, size);
-//        return new ResponseEntity<>(result, HttpStatus.OK);
-        return new ResponseEntity<>("Usługa jeszcze nie jest gotowa", HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/reservation/all/{userId}/{page}")
@@ -76,13 +75,12 @@ public class ReservationController {
             @ApiResponse(code = 200, message = "Sukces"),
             @ApiResponse(code = 204, message = "Brak dostępnych zasobów spełniających kryteria"),
             @ApiResponse(code = 400, message = "Nieprawidłowe dane w żądaniu"),
-//            @ApiResponse(code = 403, message = "Błąd autoryzacji"), //TODO: After JWT implementation
+            @ApiResponse(code = 403, message = "Błąd autoryzacji"),
             @ApiResponse(code = 500, message = "Błąd serwera"),
-            @ApiResponse(code = 501, message = "Usługa jeszcze nie jest gotowa")
     })
-    public ResponseEntity<?> getUserReservations(@ApiParam @Min(1) @PathVariable Integer userId,
-                                                 @ApiParam @Min(1) @NotNull @PathVariable Integer page,
-                                                 @ApiParam @Min(1) @NotNull @RequestBody Integer size) {
+    public ResponseEntity<?> getUserReservations(@ApiParam @Positive @PathVariable Integer userId,
+                                                 @ApiParam @Positive @PathVariable Integer page,
+                                                 @ApiParam @Positive @RequestBody Integer size) {
         List<ReservationDto> reservations = reservationService.getUserReservations(userId, page, size);
         return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
@@ -93,29 +91,26 @@ public class ReservationController {
             @ApiResponse(code = 200, message = "Sukces"),
             @ApiResponse(code = 204, message = "Brak dostępnych zasobów spełniających kryteria"),
             @ApiResponse(code = 400, message = "Nieprawidłowe dane w żądaniu"),
-//            @ApiResponse(code = 403, message = "Błąd autoryzacji"), //TODO: After JWT implementation
+            @ApiResponse(code = 403, message = "Błąd autoryzacji"),
             @ApiResponse(code = 500, message = "Błąd serwera"),
-            @ApiResponse(code = 501, message = "Usługa jeszcze nie jest gotowa")
     })
-    public ResponseEntity<?> updateReservation(@ApiParam @PathVariable @NotNull Integer id, @ApiParam @PathVariable @NotNull ReservationDto newData) {
+    public ResponseEntity<?> updateReservation(@ApiParam @PathVariable @NotNull Integer id,
+                                               @ApiParam @PathVariable @NotNull ReservationDto newData) {
         reservationService.updateReservation(id, newData);
-//        return new ResponseEntity<>("Sukces", HttpStatus.OK);
-        return new ResponseEntity<>("Usługa jeszcze nie jest gotowa", HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>("Sukces", HttpStatus.OK);
     }
 
     @DeleteMapping("/reservation/{id}")
     @ApiOperation(value = "Anuluje rezerwację o danym ID.")
     @ApiResponses( value = {
             @ApiResponse(code = 200, message = "Sukces"),
-//            @ApiResponse(code = 403, message = "Błąd autoryzacji"), //TODO: After JWT implementation
+            @ApiResponse(code = 403, message = "Błąd autoryzacji"),
             @ApiResponse(code = 204, message = "Brak dostępnych zasobów spełniających kryteria"),
             @ApiResponse(code = 500, message = "Błąd serwera"),
-            @ApiResponse(code = 501, message = "Usługa jeszcze nie jest gotowa")
     })
     public ResponseEntity<?> cancelReservation(@ApiParam @PathVariable Integer reservationId) {
         reservationService.cancelReservation(reservationId);
-//        return new ResponseEntity<>("Sukces", HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>("Sukces", HttpStatus.OK);
     }
 
     @PatchMapping("/reservation/{id}/status")
@@ -123,30 +118,14 @@ public class ReservationController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Sukces"),
             @ApiResponse(code = 400, message = "Nieprawidłowe dane w żądaniu"),
-//            @ApiResponse(code = 403, message = "Błąd autoryzacji"), //TODO: After JWT implementation
+            @ApiResponse(code = 403, message = "Błąd autoryzacji"),
             @ApiResponse(code = 204, message = "Brak dostępnych zasobów spełniających kryteria"),
             @ApiResponse(code = 500, message = "Błąd serwera"),
-            @ApiResponse(code = 501, message = "Usługa jeszcze nie jest gotowa")
     })
-    public ResponseEntity<?> changeReservationStatus(@ApiParam @PathVariable Integer reservationId, @RequestBody String status) {
+    public ResponseEntity<?> changeReservationStatus(@ApiParam @PathVariable Integer reservationId,
+                                                     @RequestBody String status
+    ) {
         reservationService.changeReservationStatus(reservationId, status);
-//        return new ResponseEntity<>("Sukces", HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>("Sukces", HttpStatus.OK);
     }
-
-    @GetMapping("/testNetworking")
-    public void testNetworking() {
-        // http://container-name:container-port/endpoint
-        // String baseUrl = "http://room-service:8080/mock"; // in case of deploying to Docker
-        String baseUrl = "http://localhost:8080/mock"; // in case of running locally
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response;
-        try{
-            response = restTemplate.getForEntity(baseUrl, String.class);
-            System.out.println(response.getBody());
-        }catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
 }

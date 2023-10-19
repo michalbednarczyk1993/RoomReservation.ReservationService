@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.RestClientException;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -47,5 +48,11 @@ public class ExceptionHandlerControllerAdvice {
     public ResponseEntity<Object> handleUnexpectedExceptions(Exception ex) {
         log.error(ex.toString());
         return new ResponseEntity<>("Błąd serwera", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(RestClientException.class)
+    public ResponseEntity<Object> handleServiceUnavailableExceptions(RestClientException ex) {
+        log.error(ex.toString());
+        return new ResponseEntity<>("Błąd połączenia z zewnętrznym serwisem", HttpStatus.SERVICE_UNAVAILABLE);
     }
 }
