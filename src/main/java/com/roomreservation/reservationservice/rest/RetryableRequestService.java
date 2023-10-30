@@ -7,7 +7,6 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.ConnectException;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 

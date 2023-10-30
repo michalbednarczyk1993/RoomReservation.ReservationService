@@ -49,7 +49,6 @@ public class ReservationService {
     public void updateReservation(Integer id, ReservationDto newData) {
         ReservationEntity entity = reservationRepository.getReferenceById(id);
         entity = reservationRepository.save(newData.updateEntity(entity));
-        // TODO: Dokończyć naprawianie tej klasy
         List<ReservationServicesEntity> reservationServices = newData.toReservationservicesEntity(entity);
         reservationServices.forEach(service -> reservationServiceRespository.save(service));
     }
