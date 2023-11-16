@@ -1,6 +1,5 @@
 package com.roomreservation.reservationservice.rest;
 
-import com.roomreservation.reservationservice.core.dto.ReservationDto;
 import com.roomreservation.reservationservice.core.service.TestService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
